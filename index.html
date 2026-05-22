@@ -23,12 +23,17 @@
   </style>
   <script>
     (function() {
+      var params = new URLSearchParams(window.location.search);
+      var android = params.get('android');
+      var ios = params.get('ios');
       var ua = navigator.userAgent || '';
-      if (/android/i.test(ua)) {
-        window.location.replace('https://play.google.com/store/apps/details?id=com.euphotic.noshApp');
-      } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-        window.location.replace('https://apps.apple.com/in/app/lets-nosh/id1615978089');
+
+      if (/android/i.test(ua) && android) {
+        window.location.replace(android);
+      } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream && ios) {
+        window.location.replace(ios);
       }
+      // Desktop/unknown: falls through to show the buttons below
     })();
   </script>
 </head>
@@ -36,12 +41,21 @@
   <div class="card">
     <h1>Download our app</h1>
     <p>Choose your platform below</p>
-    <a href="https://play.google.com/store/apps/details?id=com.euphotic.noshApp" class="btn btn-android">
-      &#9654; Google Play
-    </a>
-    <a href="https://apps.apple.com/in/app/lets-nosh/id1615978089" class="btn btn-ios">
-       App Store
-    </a>
+    <script>
+      // Populate fallback buttons dynamically too
+      (function() {
+        var params = new URLSearchParams(window.location.search);
+        var android = params.get('android') || '#';
+        var ios = params.get('ios') || '#';
+        document.write(
+          '<a href="' + android + '" class="btn btn-android">&#9654; Google Play</a>' +
+          '<a href="' + ios + '" class="btn btn-ios"> App Store</a>'
+        );
+      })();
+    </script>
+    <noscript>
+      <p>Please enable JavaScript to be redirected automatically.</p>
+    </noscript>
   </div>
 </body>
 </html>
